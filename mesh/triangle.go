@@ -1,4 +1,4 @@
-package meshful
+package mesh
 
 // A triangle is made up of 3 vertices and has a surface normal
 type Triangle struct {
