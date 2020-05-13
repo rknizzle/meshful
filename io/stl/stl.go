@@ -2,12 +2,13 @@ package stl
 
 import (
 	"errors"
+	"github.com/rknizzle/meshful/mesh"
 )
 
-func read() error {
-	return errors.New("Not yet implemented")
+func Read() (*mesh.Mesh, error) {
+	return &mesh.Mesh{}, nil
 }
 
-func write() error {
+func Write() error {
 	return errors.New("Not yet implemented")
 }
