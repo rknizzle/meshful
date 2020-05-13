@@ -1,3 +1,3 @@
-module github.com/rknizzle/3dmesh
+module github.com/rknizzle/meshful
 
 go 1.13
