@@ -1,9 +1,14 @@
 package meshful
 
 import (
-	"errors"
+	"github.com/rknizzle/meshful/io/stl"
+	"github.com/rknizzle/meshful/mesh"
 )
 
-func Test() error {
-	return errors.New("Not yet implemented")
+func Test() (*mesh.Mesh, error) {
+	m, err := stl.Read()
+	if err != nil {
+		return nil, err
+	}
+	return m, nil
 }
