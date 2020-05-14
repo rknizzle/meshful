@@ -2,11 +2,11 @@ package stl
 
 import (
 	"errors"
-	"github.com/rknizzle/meshful/mesh"
+	"github.com/rknizzle/meshful"
 )
 
-func Read() (*mesh.Mesh, error) {
-	return &mesh.Mesh{}, nil
+func Read() (*meshful.Mesh, error) {
+	return &meshful.Mesh{}, nil
 }
 
 func Write() error {
