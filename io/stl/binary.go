@@ -98,3 +98,58 @@ func readBinaryUint16(buf []byte, offset *int) uint16 {
 	(*offset) += 2
 	return v
 }
+
+// Write solid in binary STL into an io.Writer.
+// Does not check whether len(mesh.Triangles) fits into uint32.
+func writeSolidBinary(w io.Writer, mesh *meshful.Mesh) error {
+	headerBuf := make([]byte, 84)
+	// write generic header
+	copy(headerBuf, []byte("Exported by meshful"))
+
+	// Write triangle count
+	binary.LittleEndian.PutUint32(headerBuf[80:84], uint32(len(mesh.Triangles)))
+	_, errHeader := w.Write(headerBuf)
+	if errHeader != nil {
+		return errHeader
+	}
+
+	// Write each triangle
+	for _, t := range mesh.Triangles {
+		tErr := writeTriangleBinary(w, &t)
+		if tErr != nil {
+			return tErr
+		}
+	}
+
+	return nil
+}
+
+func writeTriangleBinary(w io.Writer, t *meshful.Triangle) error {
+	buf := make([]byte, 50)
+	offset := 0
+	encodePoint(buf, &offset, &t.Normal)
+	encodePoint(buf, &offset, &t.Vertices[0])
+	encodePoint(buf, &offset, &t.Vertices[1])
+	encodePoint(buf, &offset, &t.Vertices[2])
+	// NOTE: Just not writing any attributes for now
+	//encodeUint16(buf, &offset, t.Attributes)
+	_, err := w.Write(buf)
+	return err
+}
+
+func encodePoint(buf []byte, offset *int, pt *meshful.Vec3) {
+	encodeFloat32(buf, offset, pt.X)
+	encodeFloat32(buf, offset, pt.Y)
+	encodeFloat32(buf, offset, pt.Z)
+}
+
+func encodeFloat32(buf []byte, offset *int, f float32) {
+	u32 := math.Float32bits(f)
+	binary.LittleEndian.PutUint32(buf[*offset:(*offset)+4], u32)
+	(*offset) += 4
+}
+
+func encodeUint16(buf []byte, offset *int, u uint16) {
+	binary.LittleEndian.PutUint16(buf[*offset:(*offset)+2], u)
+	(*offset) += 2
+}

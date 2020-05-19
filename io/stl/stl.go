@@ -104,3 +104,29 @@ func extractASCIIString(byteData []byte) string {
 	}
 	return string(byteData[0:i])
 }
+
+// WriteFile creates file with name filename and write contents of this Solid.
+// Shorthand for os.Create and Solid.WriteAll
+func WriteFile(filename string, mesh *meshful.Mesh) error {
+	file, createErr := os.Create(filename)
+	if createErr != nil {
+		return createErr
+	}
+	defer file.Close()
+
+	bufWriter := bufio.NewWriter(file)
+	err := WriteAll(bufWriter, mesh)
+	if err != nil {
+		return err
+	}
+	return bufWriter.Flush()
+}
+
+// WriteAll writes the contents of this mesh to an io.Writer. Depending on solid.IsAscii
+// the STL ASCII format, or the STL binary format is used. If IsAscii
+// is false, and the binary format is used, solid.Name will be used for
+// the header, if solid.BinaryHeader is empty.
+func WriteAll(w io.Writer, mesh *meshful.Mesh) error {
+	// write the mesh to a binary stl file
+	return writeSolidBinary(w, mesh)
+}
