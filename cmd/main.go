@@ -8,6 +8,14 @@ import (
 
 func main() {
 	var m *meshful.Mesh
-	m, _ = stl.Read()
+	m, err := stl.ReadFile("cmd/testdata/binary_cube.stl")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(m)
+	err = stl.WriteFile("new.stl", m)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Done")
 }
