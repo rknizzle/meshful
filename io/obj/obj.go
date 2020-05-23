@@ -2,6 +2,7 @@ package obj
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"github.com/rknizzle/meshful"
 	"io"
@@ -38,26 +39,47 @@ func readAll(r io.Reader) (mesh *meshful.Mesh, err error) {
 		}
 
 		// the first word of each line should be a token specifying the data type of that line
-		words := strings.Fields(line)
-		token := words[0]
+		tokens := strings.Fields(line)
+		firstToken := tokens[0]
 
-		if token == "#" {
+		if firstToken == "#" {
 			// Its just a comment, continue to next line
 			continue
 		}
-		if token == "v" {
+		if firstToken == "v" {
 			// new vertex -- get the coordinates and add it to the list of vertices
-			v := meshful.Vec3{}
+			v, err := parseVertex(tokens)
+			if err != nil {
+				return nil, err
+			}
 			vertices = append(vertices, v)
 		}
-		if token == "f" {
+		if firstToken == "f" {
 			// new face -- construct the face using the list of vertices
-			f := meshful.Triangle{}
+			f, err := parseFace(tokens)
+			if err != nil {
+				return nil, err
+			}
 			faces = append(faces, f)
 		}
 
-		fmt.Println(token)
+		fmt.Println(firstToken)
 	}
 
 	return &meshful.Mesh{}, nil
+}
+
+func parseVertex(tokens []string) (meshful.Vec3, error) {
+	if len(tokens) != 4 {
+		return meshful.Vec3{}, errors.New("Incorrect number of tokens in the vertex line")
+	}
+
+	return meshful.Vec3{}, nil
+}
+
+func parseFace(tokens []string) (meshful.Triangle, error) {
+	if len(tokens) != 4 {
+		return meshful.Triangle{}, errors.New("Incorrect number of tokens in the face line")
+	}
+	return meshful.Triangle{}, nil
 }
