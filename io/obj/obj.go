@@ -7,6 +7,7 @@ import (
 	"github.com/rknizzle/meshful"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -74,7 +75,22 @@ func parseVertex(tokens []string) (meshful.Vec3, error) {
 		return meshful.Vec3{}, errors.New("Incorrect number of tokens in the vertex line")
 	}
 
-	return meshful.Vec3{}, nil
+	x, err := strconv.ParseFloat(tokens[1], 32)
+	if err != nil {
+		return meshful.Vec3{}, err
+	}
+
+	y, err := strconv.ParseFloat(tokens[2], 32)
+	if err != nil {
+		return meshful.Vec3{}, err
+	}
+
+	z, err := strconv.ParseFloat(tokens[3], 32)
+	if err != nil {
+		return meshful.Vec3{}, err
+	}
+
+	return meshful.Vec3{float32(x), float32(y), float32(z)}, nil
 }
 
 func parseFace(tokens []string) (meshful.Triangle, error) {
