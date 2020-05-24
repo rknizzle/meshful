@@ -3,7 +3,6 @@ package obj
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"github.com/rknizzle/meshful"
 	"io"
 	"os"
@@ -57,17 +56,15 @@ func readAll(r io.Reader) (mesh *meshful.Mesh, err error) {
 		}
 		if firstToken == "f" {
 			// new face -- construct the face using the list of vertices
-			f, err := parseFace(tokens)
+			f, err := parseFace(tokens, vertices)
 			if err != nil {
 				return nil, err
 			}
 			faces = append(faces, f)
 		}
-
-		fmt.Println(firstToken)
 	}
 
-	return &meshful.Mesh{}, nil
+	return &meshful.Mesh{faces}, nil
 }
 
 func parseVertex(tokens []string) (meshful.Vec3, error) {
@@ -93,9 +90,30 @@ func parseVertex(tokens []string) (meshful.Vec3, error) {
 	return meshful.Vec3{float32(x), float32(y), float32(z)}, nil
 }
 
-func parseFace(tokens []string) (meshful.Triangle, error) {
+// parse the line of the OBJ file into a Triangle data structure
+// example values:
+// f 1/1/1 2/2/2 3/3/3
+// f 1 2 3
+func parseFace(tokens []string, vertices []meshful.Vec3) (meshful.Triangle, error) {
 	if len(tokens) != 4 {
 		return meshful.Triangle{}, errors.New("Incorrect number of tokens in the face line")
 	}
-	return meshful.Triangle{}, nil
+
+	faceVerts := [3]meshful.Vec3{}
+	// get the data for each vertex
+	for i := 1; i <= 3; i++ {
+		// example vertex data values: 1/1/1 or 1
+		// if the vertex data is seperated by '/', split it and get the first value (the number in the vertices list)
+		vertexData := strings.Split(tokens[i], "/")
+		// convert vertex number value from string -> int
+		vertexNumber, err := strconv.Atoi(vertexData[0])
+		if err != nil {
+			return meshful.Triangle{}, err
+		}
+
+		vertexIndex := vertexNumber - 1
+		faceVerts[i-1] = vertices[vertexIndex]
+	}
+
+	return meshful.Triangle{Vertices: faceVerts}, nil
 }
