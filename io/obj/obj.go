@@ -178,6 +178,13 @@ func writeAll(mesh *meshful.Mesh, w io.Writer) error {
 		faceList = append(faceList, formatFace(verticesInFace))
 	}
 
+	// write comment header
+	header := "# meshful OBJ export (github.com/rknizzle/meshful)\n\n"
+	_, err := w.Write([]byte(header))
+	if err != nil {
+		return err
+	}
+
 	// write all the vertex lines to the file
 	for _, v := range vertexList {
 		_, err := w.Write([]byte(v))
