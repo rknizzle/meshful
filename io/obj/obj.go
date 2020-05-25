@@ -3,6 +3,7 @@ package obj
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"github.com/rknizzle/meshful"
 	"io"
 	"os"
@@ -116,4 +117,79 @@ func parseFace(tokens []string, vertices []meshful.Vec3) (meshful.Triangle, erro
 	}
 
 	return meshful.Triangle{Vertices: faceVerts}, nil
+}
+
+func WriteFile(filename string, mesh *meshful.Mesh) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	bufWriter := bufio.NewWriter(file)
+	err = writeAll(mesh, bufWriter)
+	if err != nil {
+		return err
+	}
+	return bufWriter.Flush()
+}
+
+func writeAll(mesh *meshful.Mesh, w io.Writer) error {
+	// a map used to not duplicate vertices written to the obj file
+	vertexTracker := make(map[string]int)
+
+	// list of strings to be written to the obj file
+	var vertexList []string
+	var faceList []string
+
+	// loop through each triangle in the mesh
+	for _, triangle := range mesh.Triangles {
+
+		// tracks the 3 vertex numbers that make up the face
+		verticesInFace := [3]int{}
+
+		// for each vertex in the triangle
+		for i := 0; i < 3; i++ {
+			// format the vertex to the obj style line
+			// also use the string as the key in the vertexTracker map
+			vStr := formatVertex(triangle.Vertices[i])
+
+			number, exists := vertexTracker[vStr]
+			// if the vertex hasn't already been added as an obj string
+			if !exists {
+				// add it to the vertex list
+				vertexList = append(vertexList, vStr)
+				// store the vertex number in the vertexTracker map
+				vertexNumberInList := len(vertexList) - 1
+				vertexTracker[vStr] = vertexNumberInList
+				// add the vertex number to the vertices that make up this face
+				verticesInFace[i] = vertexNumberInList
+			} else {
+				// else the vertex already exists, so no need to add a new vertex line
+				// just set that this vertex number is part of the current face
+				verticesInFace[i] = number
+			}
+		}
+
+		// format the face into an obj line
+		faceList = append(faceList, formatFace(verticesInFace))
+	}
+
+	// write all the vertex lines to the file
+	for _, v := range vertexList {
+		_, err := w.Write([]byte(v))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func formatVertex(vertex meshful.Vec3) string {
+	return fmt.Sprintf("v %f %f %f\n", vertex.X, vertex.Y, vertex.Z)
+}
+
+func formatFace(verticesInFace [3]int) string {
+	return fmt.Sprintf("f %i %i %i\n", verticesInFace[0], verticesInFace[1], verticesInFace[1])
 }
