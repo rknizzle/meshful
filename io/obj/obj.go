@@ -68,6 +68,9 @@ func readAll(r io.Reader) (mesh *meshful.Mesh, err error) {
 	return &meshful.Mesh{faces}, nil
 }
 
+// parse the line of the OBJ file into a Vec3 data structure
+// example value:
+// v 0.000000 10.000000 0.000000
 func parseVertex(tokens []string) (meshful.Vec3, error) {
 	if len(tokens) != 4 {
 		return meshful.Vec3{}, errors.New("Incorrect number of tokens in the vertex line")
