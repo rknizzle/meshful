@@ -7,7 +7,4 @@ type Triangle struct {
 
 	// triangle normal vector
 	Normal Vec3
-
-	// extra info stored only in stl binary files
-	Extra uint16
 }
