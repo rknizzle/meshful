@@ -160,7 +160,7 @@ func writeAll(mesh *meshful.Mesh, w io.Writer) error {
 				// add it to the vertex list
 				vertexList = append(vertexList, vStr)
 				// store the vertex number in the vertexTracker map
-				vertexNumberInList := len(vertexList) - 1
+				vertexNumberInList := len(vertexList)
 				vertexTracker[vStr] = vertexNumberInList
 				// add the vertex number to the vertices that make up this face
 				verticesInFace[i] = vertexNumberInList
@@ -183,6 +183,14 @@ func writeAll(mesh *meshful.Mesh, w io.Writer) error {
 		}
 	}
 
+	// write all the face lines to the file
+	for _, f := range faceList {
+		_, err := w.Write([]byte(f))
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -191,5 +199,5 @@ func formatVertex(vertex meshful.Vec3) string {
 }
 
 func formatFace(verticesInFace [3]int) string {
-	return fmt.Sprintf("f %i %i %i\n", verticesInFace[0], verticesInFace[1], verticesInFace[1])
+	return fmt.Sprintf("f %d %d %d\n", verticesInFace[0], verticesInFace[1], verticesInFace[2])
 }
