@@ -7,4 +7,7 @@ type Triangle struct {
 
 	// triangle normal vector
 	Normal Vec3
+
+	// color of the triangle
+	Color Color
 }
