@@ -233,7 +233,7 @@ func writeObj(mesh *meshful.Mesh, w io.Writer) ([]string, error) {
 	for colorStr, list := range faceLists {
 		// if there is no color specified for some faces just set the color to grey
 		if colorStr == "" {
-			colorStr = "Kd 0.3 0.3 0.3"
+			colorStr = "Kd 0.3 0.3 0.3\n"
 		}
 
 		// for each color add the lines for the color in the mtl file
@@ -242,9 +242,8 @@ func writeObj(mesh *meshful.Mesh, w io.Writer) ([]string, error) {
 		// and colorStr is the line that defines the materials RGB values
 		newMaterial := fmt.Sprintf("newmtl %s", material)
 		// append both lines to the list of lines to be written to the mtl file
-		mtlData = append(mtlData, newMaterial+"\n")
-		mtlData = append(mtlData, colorStr+"\n")
-		mtlData = append(mtlData, "\n")
+		mtlData = append(mtlData, newMaterial)
+		mtlData = append(mtlData, colorStr)
 
 		// specify that the next faces will be using the newly created material
 		_, err := w.Write([]byte(fmt.Sprintf("usemtl %s\n", material)))
@@ -285,7 +284,7 @@ func formatColor(color *meshful.Color) string {
 // write the material/color contents of the mesh to the mtl file
 func writeMaterial(mtlData []string, w io.Writer) error {
 	// write comment header
-	header := "# meshful mtl export (github.com/rknizzle/meshful)\n\n"
+	header := "# meshful mtl export (github.com/rknizzle/meshful)\n"
 	_, err := w.Write([]byte(header))
 	if err != nil {
 		return err
@@ -293,7 +292,7 @@ func writeMaterial(mtlData []string, w io.Writer) error {
 
 	// write material data
 	for _, x := range mtlData {
-		_, err := w.Write([]byte(x))
+		_, err := w.Write([]byte("\n" + x))
 		if err != nil {
 			return err
 		}
