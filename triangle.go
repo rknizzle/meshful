@@ -9,5 +9,5 @@ type Triangle struct {
 	Normal Vec3
 
 	// color of the triangle
-	Color Color
+	Color *Color
 }
