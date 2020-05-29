@@ -39,3 +39,12 @@ func (mesh *Mesh) GetBoundingBox() [3]float32 {
 
 	return [3]float32{maxX - minX, maxY - minY, maxZ - minZ}
 }
+
+func (mesh *Mesh) GetVolume() float32 {
+	var volume float32 = 0.0
+	// loop through each triangle and add up the volume of each to get the meshes volume
+	for _, triangle := range mesh.Triangles {
+		volume += triangle.GetSignedVolume()
+	}
+	return volume
+}
