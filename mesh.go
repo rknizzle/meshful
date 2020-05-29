@@ -48,3 +48,11 @@ func (mesh *Mesh) GetVolume() float32 {
 	}
 	return volume
 }
+
+func (mesh *Mesh) GetSurfaceArea() float32 {
+	var area float32 = 0.0
+	for _, triangle := range mesh.Triangles {
+		area += triangle.GetArea()
+	}
+	return area
+}
