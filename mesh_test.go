@@ -55,7 +55,15 @@ func TestBoundingBox(t *testing.T) {
 func TestVolume(t *testing.T) {
 	mesh := makeTestMesh()
 	volume := mesh.GetVolume()
-	if volume == 0 {
-		t.Errorf("Expected non zero volume")
+	if volume <= 0 {
+		t.Errorf("Expected positive non-zero volume")
+	}
+}
+
+func TestArea(t *testing.T) {
+	mesh := makeTestMesh()
+	area := mesh.GetSurfaceArea()
+	if area <= 0 {
+		t.Errorf("Expected positive non-zero surface area")
 	}
 }
