@@ -11,3 +11,7 @@ type Triangle struct {
 	// color of the triangle
 	Color *Color
 }
+
+func (t *Triangle) GetSignedVolume() float32 {
+	return float32(t.Vertices[0].Dot(t.Vertices[1].Cross(t.Vertices[2])) / 6.0)
+}
