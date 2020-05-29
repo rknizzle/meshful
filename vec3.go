@@ -20,3 +20,12 @@ func (vec Vec3) Dot(other Vec3) float64 {
 		float64(vec.Y)*float64(other.Y) +
 		float64(vec.Z)*float64(other.Z)
 }
+
+// diff returns the difference between two vectors
+func (vec Vec3) Diff(other Vec3) Vec3 {
+	return Vec3{
+		vec.X - other.X,
+		vec.Y - other.Y,
+		vec.Z - other.Z,
+	}
+}
