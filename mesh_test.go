@@ -51,3 +51,11 @@ func TestBoundingBox(t *testing.T) {
 		t.Errorf("Expected bounding box of [1 1 1], found: %v", bbox)
 	}
 }
+
+func TestVolume(t *testing.T) {
+	mesh := makeTestMesh()
+	volume := mesh.GetVolume()
+	if volume == 0 {
+		t.Errorf("Expected non zero volume")
+	}
+}
