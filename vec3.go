@@ -13,3 +13,10 @@ func (vec Vec3) Cross(other Vec3) Vec3 {
 		vec.X*other.Y - vec.Y*other.X,
 	}
 }
+
+// get the dot product of two vectors
+func (vec Vec3) Dot(other Vec3) float64 {
+	return float64(vec.X)*float64(other.X) +
+		float64(vec.Y)*float64(other.Y) +
+		float64(vec.Z)*float64(other.Z)
+}
