@@ -16,11 +16,11 @@ type Triangle struct {
 	Color *Color
 }
 
-func (t *Triangle) GetSignedVolume() float32 {
+func (t *Triangle) SignedVolume() float32 {
 	return float32(t.Vertices[0].Dot(t.Vertices[1].Cross(t.Vertices[2])) / 6.0)
 }
 
-func (t *Triangle) GetArea() float32 {
+func (t *Triangle) Area() float32 {
 	ab := t.Vertices[0].Diff(t.Vertices[1])
 	ac := t.Vertices[0].Diff(t.Vertices[2])
 	cross := ab.Cross(ac)

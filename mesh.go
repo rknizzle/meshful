@@ -5,7 +5,7 @@ type Mesh struct {
 	Triangles []Triangle
 }
 
-func (mesh *Mesh) GetBoundingBox() [3]float32 {
+func (mesh *Mesh) BoundingBox() [3]float32 {
 	minX := mesh.Triangles[0].Vertices[0].X
 	maxX := mesh.Triangles[0].Vertices[0].X
 	minY := mesh.Triangles[0].Vertices[0].Y
@@ -40,19 +40,19 @@ func (mesh *Mesh) GetBoundingBox() [3]float32 {
 	return [3]float32{maxX - minX, maxY - minY, maxZ - minZ}
 }
 
-func (mesh *Mesh) GetVolume() float32 {
+func (mesh *Mesh) Volume() float32 {
 	var volume float32 = 0.0
 	// loop through each triangle and add up the volume of each to get the meshes volume
 	for _, triangle := range mesh.Triangles {
-		volume += triangle.GetSignedVolume()
+		volume += triangle.SignedVolume()
 	}
 	return volume
 }
 
-func (mesh *Mesh) GetSurfaceArea() float32 {
+func (mesh *Mesh) SurfaceArea() float32 {
 	var area float32 = 0.0
 	for _, triangle := range mesh.Triangles {
-		area += triangle.GetArea()
+		area += triangle.Area()
 	}
 	return area
 }
