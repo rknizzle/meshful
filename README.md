@@ -1,5 +1,5 @@
 # meshful
-#### Library for handling 3d triangle meshes
+#### Library for processing 3d triangle meshes
 
 ## Features
 Read/Write STL and OBJ files and get mesh dimensions
